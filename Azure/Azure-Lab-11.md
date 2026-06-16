@@ -9,5 +9,7 @@ sudo nano /var/www/html/index.html
 sudo systemctl restart nginx
 
 ## Result
-Custom HTML page successfully served from MyVM at http://138.91.117.164
-Page displays: "Welcome to Choaro's Azure VM!"
+Custom professional portfolio page deployed on MyVM.
+Page includes photo, skills, experience, projects and education.
+Hosted at http://138.91.117.164
+Profile photo served from GitHub raw URL.
