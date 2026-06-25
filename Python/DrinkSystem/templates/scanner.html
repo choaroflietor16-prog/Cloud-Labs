@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Scanner · DrinkDesk{% endblock %}
+{% block page_title %}Scanner{% endblock %}
+
+{% block content %}
+
+<div class="scanner-layout">
+
+  <!-- QR Scanner box -->
+  <div class="card-panel mb-4">
+    <div class="panel-head">
+      <span class="panel-title">Scan Guest QR Code</span>
+    </div>
+    <div class="card-body-pad">
+
+      <div id="reader"></div>
+
+      <div class="divider-text">or enter ID manually</div>
+
+      <form method="POST" action="{{ url_for('scanner_lookup') }}">
+        <div class="manual-row">
+          <input type="text" name="guest_id" class="form-control"
+                 placeholder="e.g. G001"
+                 autocomplete="off"
+                 autocapitalize="characters" />
+          <button type="submit" class="btn btn-primary">Look Up</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Result card -->
+  {% if scanned %}
+  <div class="card-panel">
+    <div class="panel-head">
+      <span class="panel-title">Guest Result</span>
+    </div>
+    <div class="card-body-pad">
+
+      {% if guest %}
+
+      <div class="guest-result">
+        <div class="guest-avatar-lg">{{ guest.name[0] }}</div>
+        <div class="guest-info">
+          <div class="guest-name">{{ guest.name }}</div>
+          <div class="guest-id-tag">{{ guest.id }}</div>
+        </div>
+      </div>
+
+      <div class="credit-display
+        {% if guest.credits == 0 %}credit-display-zero
+        {% elif guest.credits <= 2 %}credit-display-low
+        {% else %}credit-display-ok{% endif %}">
+        <div class="credit-number">{{ guest.credits }}</div>
+        <div class="credit-label">credit{{ 's' if guest.credits != 1 }} remaining</div>
+      </div>
+
+      {% if guest.credits > 0 %}
+      <a href="{{ url_for('deduct', gid=guest.id) }}" class="btn btn-deduct">
+        <i class="bi bi-dash-circle me-2"></i>Deduct 1 Credit
+      </a>
+      {% else %}
+      <div class="no-credits-msg">
+        <i class="bi bi-x-circle me-2"></i>No credits remaining
+      </div>
+      {% endif %}
+
+      {% else %}
+      <div class="empty-state">
+        <i class="bi bi-person-x"></i>
+        <p>Guest not found. Check the ID and try again.</p>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- QR scanner library -->
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+  function onScanSuccess(decodedText) {
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "{{ url_for('scanner_lookup') }}";
+    const input = document.createElement("input");
+    input.type  = "hidden";
+    input.name  = "guest_id";
+    input.value = decodedText.trim();
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  const html5QrcodeScanner = new Html5QrcodeScanner(
+    "reader",
+    { fps: 10, qrbox: 250 },
+    false
+  );
+  html5QrcodeScanner.render(onScanSuccess);
+</script>
+
+{% endblock %}

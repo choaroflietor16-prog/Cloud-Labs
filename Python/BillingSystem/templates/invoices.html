@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Invoices · BillDesk{% endblock %}
+{% block page_title %}Invoices{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{{ url_for('invoice_add') }}" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus-lg me-1"></i>New Invoice
+  </a>
+{% endblock %}
+
+{% block content %}
+
+<div class="filter-tabs mb-4">
+  {% for s in ['All','Pending','Paid','Overdue'] %}
+  <a href="{{ url_for('invoices_list', status=s) }}"
+     class="filter-tab {{ 'active' if status_filter == s }}">{{ s }}</a>
+  {% endfor %}
+</div>
+
+<div class="card-panel">
+  <div class="panel-head">
+    <span class="panel-title">
+      {% if status_filter == 'All' %}All Invoices{% else %}{{ status_filter }} Invoices{% endif %}
+    </span>
+    <span class="panel-count">{{ invoices|length }}</span>
+  </div>
+
+  {% if invoices %}
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Invoice #</th>
+          <th>Customer</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Due</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inv in invoices %}
+        <tr>
+          <td>
+            <a href="{{ url_for('invoice_view', iid=inv.id) }}" class="inv-id-link">{{ inv.id }}</a>
+          </td>
+          <td>{{ inv.customer_name }}</td>
+          <td class="text-muted small">{{ inv.description }}</td>
+          <td class="text-muted small">{{ inv.date }}</td>
+          <td class="text-muted small">{{ inv.due }}</td>
+          <td><strong>R{{ "%.2f"|format(inv.amount) }}</strong></td>
+          <td><span class="badge-status badge-{{ inv.status|lower }}">{{ inv.status }}</span></td>
+          <td class="text-end" style="white-space:nowrap;">
+            {% if inv.status != 'Paid' %}
+            <a href="{{ url_for('invoice_mark', iid=inv.id, status='Paid') }}"
+               class="action-btn action-green" title="Mark Paid">
+              <i class="bi bi-check-lg"></i>
+            </a>
+            {% endif %}
+            <a href="{{ url_for('invoice_edit', iid=inv.id) }}" class="action-btn" title="Edit">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <a href="{{ url_for('invoice_delete', iid=inv.id) }}"
+               class="action-btn action-danger"
+               onclick="return confirm('Delete {{ inv.id }}?')"
+               title="Delete">
+              <i class="bi bi-trash"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="bi bi-file-earmark-text"></i>
+    <p>No invoices found. <a href="{{ url_for('invoice_add') }}">Create one.</a></p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

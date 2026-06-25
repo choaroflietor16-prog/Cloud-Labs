@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if customer else 'Add' }} Customer · BillDesk{% endblock %}
+{% block page_title %}{{ 'Edit' if customer else 'Add' }} Customer{% endblock %}
+
+{% block content %}
+<div class="form-panel">
+  <form method="POST">
+
+    <div class="form-group">
+      <label class="form-label">Full Name <span class="required">*</span></label>
+      <input type="text" name="name" class="form-control"
+             value="{{ customer.name if customer else '' }}"
+             placeholder="e.g. Sipho Khumalo" required />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <input type="email" name="email" class="form-control"
+             value="{{ customer.email if customer else '' }}"
+             placeholder="e.g. sipho@company.co.za" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Phone Number</label>
+      <input type="text" name="phone" class="form-control"
+             value="{{ customer.phone if customer else '' }}"
+             placeholder="e.g. 082 123 4567" />
+    </div>
+
+    <div class="form-actions">
+      <a href="{{ url_for('customers_list') }}" class="btn btn-ghost">Cancel</a>
+      <button type="submit" class="btn btn-primary">
+        {{ 'Save Changes' if customer else 'Add Customer' }}
+      </button>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

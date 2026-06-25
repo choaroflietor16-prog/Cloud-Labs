@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard · BillDesk{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{{ url_for('invoice_add') }}" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus-lg me-1"></i>New Invoice
+  </a>
+{% endblock %}
+
+{% block content %}
+
+<div class="row g-4 mb-4">
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card stat-green">
+      <div class="stat-icon"><i class="bi bi-cash-stack"></i></div>
+      <div class="stat-body">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value">R{{ "%.2f"|format(stats.total_revenue) }}</div>
+        <div class="stat-sub">{{ stats.paid_count }} paid invoice{{ 's' if stats.paid_count != 1 }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card stat-amber">
+      <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
+      <div class="stat-body">
+        <div class="stat-label">Pending</div>
+        <div class="stat-value">R{{ "%.2f"|format(stats.pending_amt) }}</div>
+        <div class="stat-sub">{{ stats.pending_count }} awaiting payment</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card stat-blue">
+      <div class="stat-icon"><i class="bi bi-people"></i></div>
+      <div class="stat-body">
+        <div class="stat-label">Customers</div>
+        <div class="stat-value">{{ stats.total_customers }}</div>
+        <div class="stat-sub">active accounts</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card stat-red">
+      <div class="stat-icon"><i class="bi bi-exclamation-triangle"></i></div>
+      <div class="stat-body">
+        <div class="stat-label">Overdue</div>
+        <div class="stat-value">{{ stats.overdue_count }}</div>
+        <div class="stat-sub">invoice{{ 's' if stats.overdue_count != 1 }} past due</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="card-panel">
+  <div class="panel-head">
+    <span class="panel-title">Recent Invoices</span>
+    <a href="{{ url_for('invoices_list') }}" class="panel-link">View all</a>
+  </div>
+
+  {% if recent %}
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Invoice</th>
+          <th>Customer</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Due</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inv in recent %}
+        <tr onclick="window.location='{{ url_for("invoice_view", iid=inv.id) }}'" style="cursor:pointer;">
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="bi bi-file-earmark-text"></i>
+    <p>No invoices yet. <a href="{{ url_for('invoice_add') }}">Create your first one.</a></p>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

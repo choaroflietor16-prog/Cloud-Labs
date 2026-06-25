@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Customers · BillDesk{% endblock %}
+{% block page_title %}Customers{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{{ url_for('customer_add') }}" class="btn btn-primary btn-sm">
+    <i class="bi bi-person-plus me-1"></i>Add Customer
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="card-panel">
+  <div class="panel-head">
+    <span class="panel-title">All Customers</span>
+    <span class="panel-count">{{ customers|length }}</span>
+  </div>
+
+  {% if customers %}
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Added</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in customers %}
+        <tr>
+          <td>
+            <div class="customer-cell">
+              <div class="avatar">{{ c.name[0] }}</div>
+              <span>{{ c.name }}</span>
+            </div>
+          </td>
+          <td class="text-muted">{{ c.email or '—' }}</td>
+          <td class="text-muted">{{ c.phone or '—' }}</td>
+          <td class="text-muted small">{{ c.created }}</td>
+          <td class="text-end">
+            <a href="{{ url_for('customer_edit', cid=c.id) }}" class="action-btn" title="Edit">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <a href="{{ url_for('customer_delete', cid=c.id) }}"
+               class="action-btn action-danger"
+               onclick="return confirm('Remove {{ c.name }}?')"
+               title="Delete">
+              <i class="bi bi-trash"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="bi bi-people"></i>
+    <p>No customers yet. <a href="{{ url_for('customer_add') }}">Add your first one.</a></p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

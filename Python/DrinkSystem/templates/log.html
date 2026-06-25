@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Log · DrinkDesk{% endblock %}
+{% block page_title %}Drink Log{% endblock %}
+
+{% block content %}
+<div class="card-panel">
+  <div class="panel-head">
+    <span class="panel-title">All Transactions</span>
+    <span class="panel-count">{{ log|length }}</span>
+  </div>
+
+  {% if log %}
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Guest</th>
+          <th>ID</th>
+          <th>Credits Left After</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in log %}
+        <tr>
+          <td class="text-muted small">{{ entry.date }} {{ entry.time }}</td>
+          <td>
+            <div class="customer-cell">
+              <div class="avatar">{{ entry.guest_name[0] }}</div>
+              <span>{{ entry.guest_name }}</span>
+            </div>
+          </td>
+          <td><span class="inv-id">{{ entry.guest_id }}</span></td>
+          <td>
+            <span class="credit-badge
+              {% if entry.credits_left == 0 %}credit-zero
+              {% elif entry.credits_left <= 2 %}credit-low
+              {% else %}credit-ok{% endif %}">
+              {{ entry.credits_left }} left
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="bi bi-clock-history"></i>
+    <p>No drinks deducted yet. Use the scanner to get started.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

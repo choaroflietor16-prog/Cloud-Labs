@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Guests · DrinkDesk{% endblock %}
+{% block page_title %}Guests{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{{ url_for('guest_add') }}" class="btn btn-primary btn-sm">
+    <i class="bi bi-person-plus me-1"></i>Add Guest
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="card-panel">
+  <div class="panel-head">
+    <span class="panel-title">All Guests</span>
+    <span class="panel-count">{{ guests|length }}</span>
+  </div>
+
+  {% if guests %}
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Credits Left</th>
+          <th>Used</th>
+          <th>QR Code</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for g in guests %}
+        <tr>
+          <td><span class="inv-id">{{ g.id }}</span></td>
+          <td>
+            <div class="customer-cell">
+              <div class="avatar">{{ g.name[0] }}</div>
+              <span>{{ g.name }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="credit-badge
+              {% if g.credits == 0 %}credit-zero
+              {% elif g.credits <= 2 %}credit-low
+              {% else %}credit-ok{% endif %}">
+              {{ g.credits }} credit{{ 's' if g.credits != 1 }}
+            </span>
+          </td>
+          <td class="text-muted">{{ g.used }} used</td>
+          <td>
+            <img src="{{ url_for('qr_code', gid=g.id) }}"
+                 alt="QR {{ g.id }}"
+                 class="qr-thumb" />
+          </td>
+          <td class="text-end">
+            <a href="{{ url_for('guest_edit', gid=g.id) }}" class="action-btn" title="Edit">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <a href="{{ url_for('guest_delete', gid=g.id) }}"
+               class="action-btn action-danger"
+               onclick="return confirm('Remove {{ g.name }}?')"
+               title="Delete">
+              <i class="bi bi-trash"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="bi bi-people"></i>
+    <p>No guests yet. <a href="{{ url_for('guest_add') }}">Add your first one.</a></p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

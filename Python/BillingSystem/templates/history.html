@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}History · BillDesk{% endblock %}
+{% block page_title %}Payment History{% endblock %}
+
+{% block content %}
+<div class="card-panel">
+  <div class="panel-head">
+    <span class="panel-title">Paid Invoices</span>
+    <span class="panel-count">{{ invoices|length }}</span>
+  </div>
+
+  {% if invoices %}
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Invoice</th>
+          <th>Customer</th>
+          <th>Description</th>
+          <th>Date Issued</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inv in invoices %}
+        <tr onclick="window.location='{{ url_for("invoice_view", iid=inv.id) }}'" style="cursor:pointer;">
+          <td><span class="inv-id">{{ inv.id }}</span></td>
+          <td>{{ inv.customer_name }}</td>
+          <td class="text-muted small">{{ inv.description }}</td>
+          <td class="text-muted small">{{ inv.date }}</td>
+          <td><strong class="text-success">R{{ "%.2f"|format(inv.amount) }}</strong></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4" class="text-end fw-semibold">Total Collected</td>
+          <td><strong class="text-success">
+            R{{ "%.2f"|format(invoices|sum(attribute='amount')) }}
+          </strong></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="bi bi-clock-history"></i>
+    <p>No paid invoices yet. Mark an invoice as paid to see it here.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

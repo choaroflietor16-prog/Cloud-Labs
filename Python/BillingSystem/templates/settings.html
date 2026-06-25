@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Settings · BillDesk{% endblock %}
+{% block page_title %}Settings{% endblock %}
+
+{% block content %}
+<div class="form-panel">
+  <form method="POST">
+
+    <div class="settings-section-label">Business Details</div>
+
+    <div class="form-group">
+      <label class="form-label">Business Name</label>
+      <input type="text" name="business_name" class="form-control"
+             value="{{ s.business_name }}" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Business Email</label>
+      <input type="email" name="business_email" class="form-control"
+             value="{{ s.business_email }}" />
+    </div>
+
+    <div class="settings-section-label mt-4">Billing Defaults</div>
+
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label">Currency Symbol</label>
+          <input type="text" name="currency" class="form-control"
+                 value="{{ s.currency }}" maxlength="4" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label">VAT / Tax Rate (%)</label>
+          <input type="number" name="tax_rate" class="form-control"
+                 value="{{ s.tax_rate }}" min="0" max="100" step="0.1" />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label">Payment Terms (days)</label>
+          <input type="number" name="payment_terms" class="form-control"
+                 value="{{ s.payment_terms }}" min="0" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Invoice Footer Note</label>
+      <input type="text" name="footer_note" class="form-control"
+             value="{{ s.footer_note }}"
+             placeholder="e.g. Thank you for your business." />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Save Settings</button>
+    </div>
+
+  </form>
+</div>
+{% endblock %}
