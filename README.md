@@ -45,6 +45,8 @@ Review the plan before applying it. Keep state and local variable files private.
 
 Open each lab's `.pkt` in Cisco Packet Tracer and use the corresponding README and topology image. Verify trunks and subinterfaces before troubleshooting DHCP or ACLs, then compare the routing table and neighbor state for OSPF.
 
+- [NTP configuration and verification](Networking/Packet-Tracer-Labs/Network-Services/NTP-Configuration-and-Verification/) · Network clock synchronisation in Cisco Packet Tracer.
+
 ## Python prototypes
 
 - [Billing System](Python/BillingSystem/) supports a customer and invoice workflow using Flask and in-memory data.
